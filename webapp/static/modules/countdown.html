@@ -1,0 +1,170 @@
+<style>
+    .countdown-editor .select-type > *{display: flex;}
+    .countdown-editor .select-type > * > [type="radio"],.countdown-editor .select-type > * > .iradio_square-blue{width:23px;}
+    .countdown-editor .type-style{width: 100%;display: block;border: 1px solid #bbb;}
+    .countdown-editor .type-style>img{display: block;margin: 0 auto;width: 100%;}
+    .countdown-editor .switch{display: none;}
+    .countdown-editor .active .switch{display: block;}
+
+    /*倒计时*/
+    .phone .countdown{padding: 7px;}
+    .phone .countdown .time-icon{color: #333;font-size: 14px;}
+    .phone .countdown .count{background: #be0303;color: #ffffff;margin-right: 1px;text-align: center;}
+    .phone .countdown .text{color: #be0303;text-align: center;}
+    .phone .countdown2 .count{color: #be0303;background: #ffffff;}
+    .phone .countdown2 .text{color: #be0303;}
+    .phone .countdown3{background: url(https://img.alicdn.com/imgextra/i2/137009487/TB2Wj_DXBPxQeBjy1XcXXXHzVXa-137009487.png) no-repeat;background-size:100% 100% !important;}
+    .phone .countdown3 .time-icon, .countdown3 .tips{color: #ffffff;}
+    .phone .countdown3 .count{color: #333333;background: #ffffff;}
+    .phone .countdown3 .text{color: #ffffff;}
+</style>
+<script id="modules_countdown_tpl" type="text/template">
+    <div class="container-fluid pd-0 countdown countdown{%=data.type%}" {%=data.imgUrl?'style="background:url('+data.imgUrl+')"':''%}>
+        <div class="row mg-0">
+            <div class="col-xs-6 pd-0 tips"><span class="glyphicon glyphicon-time time-icon"></span>距离{%=data.name%}<span data-status>开始</span>:</div>
+            <div class="col-xs-6 pd-0">
+                <div class="row mg-0">
+                    <div class="col-xs-1 pd-0 count js-d1">?</div>
+                    <div class="col-xs-1 pd-0 count js-d2">?</div>
+                    <div class="col-xs-1 pd-0 text">天</div>
+                    <div class="col-xs-1 pd-0 count js-h1">?</div>
+                    <div class="col-xs-1 pd-0 count js-h2">?</div>
+                    <div class="col-xs-1 pd-0 text">:</div>
+                    <div class="col-xs-1 pd-0 count js-m1">?</div>
+                    <div class="col-xs-1 pd-0 count js-m2">?</div>
+                    <div class="col-xs-1 pd-0 text">:</div>
+                    <div class="col-xs-1 pd-0 count js-s1">?</div>
+                    <div class="col-xs-1 pd-0 count js-s2">?</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="modules_countdown_editor_tpl" type="text/template">
+    <div class="countdown-editor">
+        <b>设置倒计时：</b>
+        <div class="form-inline">
+            <div class="form-group">
+                <label class="text-muted">从</label>
+                <input readonly  name="startTime" data-date-format="yyyy-mm-dd hh:ii:00" class="form-control" placeholder="开始时间">
+            </div>
+            <div class="form-group">
+                <label class="text-muted">至</label>
+                <input readonly name="endTime" data-date-format="yyyy-mm-dd hh:ii:00" class="form-control" placeholder="结束时间">
+            </div>
+        </div>
+        <div class="form-group">
+            <label><b>活动名称：</b></label>
+            <input name="name" style="width: 15em;margin-left: 15px" class="form-control" placeholder="限5个字">
+        </div>
+        <b>倒计时样式：</b>
+        <div class="select-type">
+            <label>
+                <input type="radio" name="countdownEditorType" value="1">
+                <span class="type-style light-hover light-active">
+                    <img src="https://img.alicdn.com/imgextra/i4/137009487/TB2I_6nahfxQeBjSsppXXXeoFXa-137009487.png">
+                </span>
+            </label>
+            <label>
+                <input type="radio" name="countdownEditorType" value="2">
+                <span class="type-style light-hover light-active">
+                    <img src="https://img.alicdn.com/imgextra/i1/137009487/TB25wIIXunAQeBjSZFkXXaC5FXa-137009487.png">
+                </span>
+            </label>
+            <label>
+                <input type="radio" name="countdownEditorType" value="3">
+                <span class="type-style light-hover light-active">
+                    <img src="https://img.alicdn.com/imgextra/i3/137009487/TB27gzkaazyQeBjy0FgXXbnsVXa-137009487.png">
+                    <span class="switch border-top" style="padding: 5px">
+                        <span class="form-group">
+                            <label>图片地址：</label>
+                            <input name="imgUrl" class="form-control" placeholder="图片地址">
+                        </span>
+                    </span>
+                </span>
+            </label>
+        </div>
+    </div>
+</script>
+<script>
+    ModulesController.pool['countdown'] = {
+        init: function (mode) {
+            if (mode == 'edit') {
+
+            }
+        },
+        getData: function (p) {
+            return $.extend({
+                type: 1,
+                startTime: momentFormat(moment().add(10, 's')),
+                endTime: momentFormat(moment().add(3, 'days')),
+                name: '新活动'
+            }, p.data || {});
+        },
+        editor: function (e, param) {
+            var $e = $(e), data = this.getData(param),$imgUrl;
+            $e.html(utils.string.buildTpl($('#modules_countdown_editor_tpl').html(), {data: data}))
+              .find('[name="countdownEditorType"]').iCheck({
+                checkboxClass: 'icheckbox_square',
+                radioClass: 'iradio_square-blue',
+                increaseArea: '20%' // optional
+            }).on('ifChecked.countdown',function(){
+                        $e.find('.select-type > *').removeClass('active');
+                        $(this).parents('.select-type > *:eq(0)').addClass('active');
+                        ModulesController.editor.save();
+                    })
+              .filter('[value="'+data.type+'"]').prop("checked",true).iCheck('update').parents('label:eq(0)').addClass('active');
+            editPage.inputMax($e.find('[name="name"]').val(data.name).on('focusout.countdown',function(){ModulesController.editor.save()}),5);
+            $imgUrl = $e.find('[name="imgUrl"]');
+            $imgUrl.on('focusout.countdown',function(){ModulesController.editor.save()});
+            data.imgUrl && $imgUrl.val(data.imgUrl);
+            $e.find('[name="startTime"]').val(data.startTime).on('changeDate.countdown',function(){ModulesController.editor.save()}).datetimepicker();
+            $e.find('[name="endTime"]').val(data.endTime).on('changeDate.countdown',function(){ModulesController.editor.save()}).datetimepicker();
+        },
+        getEdit: function (e) {
+            var $e = $(e),d={};
+            d.name = $e.find('[name="name"]').val();
+            d.startTime = $e.find('[name="startTime"]').val();
+            d.endTime = $e.find('[name="endTime"]').val();
+            d.type = $e.find('[name="countdownEditorType"]:checked').val();
+            if(d.type == '3'){
+                d.imgUrl = _FormatUrl($e.find('[name="imgUrl"]').val());
+            }
+            return d;
+        },
+        loader: function (e, param) {
+            var $e = $(e),
+                    data = this.getData(param), dhms, d, s, $s, $d1, $d2, $h1, $h2, $m1, $m2, $s1, $s2;
+            $e.html(utils.string.buildTpl($('#modules_countdown_tpl').html(), {data: data}));
+
+            $s = $e.find('[data-status]');
+            $d1 = $e.find('.js-d1');
+            $d2 = $e.find('.js-d2');
+            $h1 = $e.find('.js-h1');
+            $h2 = $e.find('.js-h2');
+            $m1 = $e.find('.js-m1');
+            $m2 = $e.find('.js-m2');
+            $s1 = $e.find('.js-s1');
+            $s2 = $e.find('.js-s2');
+            run();
+            setInterval(run, 1000);
+            function run() {
+                s = moment().isAfter(data.startTime);
+                d = moment(s ? data.endTime : data.startTime).diff(moment());
+                dhms = utils.date.msToDHMS(d);
+                $s.html(s ? '结束' : '开始');
+                $d1.html(parseInt(dhms.day % 100 / 10, 10));
+                $d2.html(dhms.day % 10);
+                $h1.html(parseInt(dhms.hours / 10, 10));
+                $h2.html(dhms.hours % 10);
+                $m1.html(parseInt(dhms.minutes / 10, 10));
+                $m2.html(dhms.minutes % 10);
+                $s1.html(parseInt(dhms.seconds / 10, 10));
+                $s2.html(dhms.seconds % 10);
+            }
+        },
+        destroy: function (e, param) {
+
+        }
+    };
+</script>

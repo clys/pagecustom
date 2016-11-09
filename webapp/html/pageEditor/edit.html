@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/iCheck/1.0.2/skins/square/blue.css" rel="stylesheet">
+    <link href="../../static/css/common/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="../../static/css/common/jquery-ui.min.css" rel="stylesheet" type="text/css">
+    <link href="../../static/css/common/jquery.bigcolorpicker.css" rel="stylesheet" type="text/css">
+    <link href="../../static/css/pageEditor/jquery.modulelist.css" type="text/css" rel="stylesheet"/>
+    <link href="../../static/css/pageEditor/edit.css" type="text/css" rel="stylesheet"/>
+
+    <script src="https://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/iCheck/1.0.2/icheck.min.js"></script>
+    <script src="https://cdn.bootcss.com/moment.js/2.15.2/moment.min.js"></script>
+    <script src="https://cdn.bootcss.com/moment.js/2.15.2/locale/zh-cn.js"></script>
+    <script src="../../static/js/common/bootstrap-datetimepicker.min.js"></script>
+    <script src="../../static/js/common/jquery-ui.min.js"></script>
+    <script src="../../static/js/common/jquery.bigcolorpicker.js"></script>
+    <script src="../../static/js/common/utils.js"></script>
+    <script src="../../static/js/common/base.js"></script>
+    <script src="../../static/js/pageEditor/jquery.modulelist.js"></script>
+    <script src="../../static/js/pageEditor/modulesController.js"></script>
+    <script src="../../static/js/pageEditor/edit.js"></script>
+</head>
+<div class="page-editor" data-container="pageEditor">
+    <div class="container-fluid">
+        <div class="row  col-no-margin">
+            <div class="col-md-1" style="width:20%;">
+                <div class="modules">
+                    <div class="m-left types full-y" id="switch_tag_types" role="switch-tag" data-switch-target="#edit_panels">
+                        <span class="activity" data-index="0">
+                            <span class="glyphicon glyphicon-th-large"></span>
+                            模块
+                        </span>
+                    </div>
+                    <div class="full-y m-right" id="edit_panels">
+                        <div id="modules_panel" data-index="0"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="js-focusoutrange col-md-1 full-y border-left border-right js-sketchpad"
+                 style="width:48%;background: #d3d3d3;">
+                <div class="phone-style-width-slider">
+                    <div id="phone_style_width_slider"></div>
+                </div>
+                <div class="phone-style js-phone-style">
+                    <div class="phone-top">
+                        <span class="phone-speaker"></span>
+                    </div>
+                    <div class="phone-body">
+                        <div class="phone-status-bar js-phone-bar">
+                            <span class="sb-left">
+                                <span role="pb-signal">&bull;&bull;&bull;</span><span role="pb-signal-not" style="color: #bbb">&bull;&bull;</span>
+                                <span role="pb-operator">中国移动</span>
+                                <span role="pb-wifi" class="wifi" style="font-size: 16px;padding-top: 3px"><span><i class="w-one"></i><i class="w-two"></i><i class="w-three"></i></span></span>
+                            </span>
+                            <span role="pb-time">??:??</span>
+                            <span class="sb-right">
+                                <span class="battery"><span class="b-poll"><span role="pb-power" class="b-capacity"></span></span><span class="b-electrode"></span></span>
+                            </span>
+                        </div>
+                        <div class="empty phone" id="edit_container"></div>
+                        <div class="phone-loading" id="edit_loading">
+                            <div class="bg"></div>
+                            <div class="img">
+                                <img src="http://static.zhushou001.com/wireless/img/loading.gif">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phone-bottom">
+                        <span role="nya" class="phone-button"></span>
+                    </div>
+                </div>
+                <input type="hidden" data-role="changeColorVal">
+                <div data-role="changeColor" style="position: fixed;bottom: 0;width:33px;height:25px">
+                    <div style=" width: 100%; height: 100%; position: absolute; z-index: 1; "></div>
+                    <object type="image/svg+xml" data="../../static/img/module/clothes.svg"></object>
+                </div>
+            </div>
+            <div class="col-md-1" style="width:32%;">
+                <div class="edit full-y" style="width: 100%;">
+                    <div id='editor_desc' class="border-bottom">
+                        <span class="h3"><span class="js-main">Title</span><small class="js-small">small</small></span>
+                    </div>
+                    <div id="editor">
+                    </div>
+                    <div class="border-top text-center">
+                        <button type="button" class="btn btn-warning" data-click-fn="saveEdit">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="module_tpl" type="text/template">
+    {%var name = module.name + (module.max?'(最多'+module.max+'个)':'');%}
+    <span data-mid="{%=module.mId%}" type="{%=module.type%}" title="{%=name%}">
+        <span class="m-icon">
+            {%=module.iconCode||'<img src="'+module.img+'">'%}
+        </span>
+        <span class="m-name">{%=name%}</span>
+    </span>
+</script>
+<script id="modules_tpl" type="text/template">
+    {%$.each(params,function(i,param){%}
+    <div class="panel panel-default">
+        <div class="panel-heading">{%=param.name%}</div>
+        <div class="panel-body icons">
+            {%$.each(param.modules,function(n,module){%}
+            {%var name = module.name + (module.max?'(最多'+module.max+'个)':'');%}
+            <span data-mid="{%=module.mId%}" type="{%=module.type%}" title="{%=name%}">
+                <span class="m-icon">
+                    {%=module.iconCode||'<img src="'+module.img+'">'%}
+                </span>
+                <span class="m-name">{%=name%}</span>
+            </span>
+            {%})%}
+        </div>
+    </div>
+    {%})%}
+</script>
+</html>

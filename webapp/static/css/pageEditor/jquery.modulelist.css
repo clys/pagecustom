@@ -1,0 +1,82 @@
+
+.moduleList-list {
+    width: 100%;
+}
+
+.moduleList-list:after {
+    content: "拖动模块添加";
+    background-color: #b0e0e6;
+    color: #fffbf0;
+    text-align: center;
+    font-weight: bold;
+    display: block;
+    white-space: nowrap;
+    opacity: 0.8;
+}
+
+.moduleList-list.helper:after {
+    display: none;
+}
+
+.moduleList-list.helper {
+    border: 1px solid #080808;
+
+}
+.moduleList-list.helper .mRow{
+box-shadow:none !important;
+outline:none !important;
+}
+.moduleList-list.helper > * {
+    opacity: 0.5;
+}
+
+.moduleList-list .placeholder {
+    border: 1px solid #080808;
+    background: #aaaaaa;
+    height: 15px !important;
+}
+.moduleList-list > .mRow{
+    overflow: hidden;
+}
+.moduleList-list > .mRow:before,
+.moduleList-list > .mRow:after {
+    content: " ";
+    display: table;
+}
+
+.moduleList-list > .mRow:after {
+    clear: both
+}
+
+.moduleList-list > .mRow:hover, .moduleList-list > .mRow.activity {
+    outline: 1px solid #D9534F;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 15px 2px rgba(217, 83, 79, .6);
+}
+
+.moduleList-list > .mRow.activity > .handle {
+    display: inline-block !important;
+}
+
+.moduleList-list > .mRow > .handle {
+    width: 100%;
+    color: #fff;
+    background-color: #222;
+    text-align: right;
+    cursor: ns-resize;
+    display: none;
+}
+
+.moduleList-list > .mRow:first-of-type > .handle .top,
+.moduleList-list > .mRow:first-of-type > .handle .up,
+.moduleList-list > .mRow:last-of-type > .handle .down,
+.moduleList-list > .mRow.ui-sortable-helper > .handle .top,
+.moduleList-list > .mRow.ui-sortable-helper > .handle .up,
+.moduleList-list > .mRow.ui-sortable-helper > .handle .down {
+    display: none;
+}
+
+.moduleList-list .handle > .glyphicon {
+    cursor: pointer;
+    font-size: 15px;
+    margin: 5px;
+}

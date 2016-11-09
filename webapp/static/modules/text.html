@@ -1,0 +1,91 @@
+<script>
+    ModulesController.pool['text'] = {
+        init: function (mode) {
+            if (mode == 'edit') {
+                if (typeof Simditor === 'undefined') {
+                    $('head').append(
+                            '<link href="' + System.baseUrl + 'static/css/common/simditor.css" rel="stylesheet" type="text/css">' +
+                            '<script src="' + System.baseUrl + 'static/js/common/simditor.min.js?x9wj=0i"><\/script>'
+                    );
+                }
+            }
+        },
+        editor: function (e, param) {
+            var $e = $(e);
+            $e.html('<b>文字内容：</b><br><textarea role="Simditor"></textarea>');
+            var simditor = new Simditor({
+                textarea: $e.find('[role="Simditor"]'),
+                toolbar: [
+                    'color',
+                    'bold',
+                    'italic',
+                    'underline',
+                    'strikethrough',
+                    'title',
+                    '|',
+                    'alignment',
+                    'blockquote',
+                    'link',
+                    'image',
+                    'hr'
+                ],
+                toolbarFloat: false
+            });
+            simditor.setValue(param.data.html || '');
+            simditor.on('valuechanged', function () {
+                ModulesController.editor.save();
+            });
+            $e.data('simditor', simditor);
+
+            this.pin(e);
+        },
+        getEdit: function (e) {
+            var $e = $(e),
+                    simditor = $e.find('[role="Simditor"]').data('simditor');
+            return {'html': simditor.getValue()};
+        },
+        loader: function (e, param) {
+            var $e = $(e);
+            $e.html((param.data.html || '<div class="text-center"><h4>请编辑文本</h4></div>'));
+            $e.find('img').css({'maxWidth': '100%', height: 'auto'});
+        },
+        destroy: function (e, param) {
+            var $e = $(e), simditor = $e.data('simditor');
+            simditor.destroy();
+            $e.html('').removeData('simditor');
+            $e.parent().off('scroll.ts');
+        },
+        pin: function (e) {
+            var $e = $(e),
+                    $p = $e.parent(),
+                    $pin = $e.find('.simditor-toolbar'),
+                    $ss = $e.find('.simditor-wrapper'),
+                    pintop = $e.find('.simditor').position().top,
+                    pinh = $pin.outerHeight(),
+                    i;
+            $p.on('scroll.ts', function () {
+                i = $p.scrollTop() - pintop - 1;
+                if (i > 0 && i < $ss.innerHeight() - pinh) {
+                    $ss.css({
+                        'paddingTop': pinh
+                    });
+                    $pin.css({
+                        'position': 'absolute',
+                        'top': i,
+                        'zIndex': '10'
+                    });
+                } else {
+                    $pin.css({
+                        'position': '',
+                        'top': '',
+                        'zIndex': ''
+                    });
+                    $ss.css({
+                        'paddingTop': ''
+                    });
+                }
+            })
+        }
+    };
+
+</script>
