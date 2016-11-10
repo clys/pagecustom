@@ -17,11 +17,11 @@
 	width:17px;
 	height: 17px;
 	margin: 2px 0 0;
-	background: url(/static/img/jquery.bigcolorpicker/nocolor.png) no-repeat;
+	background: url(../../static/img/jquery.bigcolorpicker/nocolor.png) no-repeat;
 }
 
 .bigpicker .nocolor:hover{
-	background: url(/static/img/jquery.bigcolorpicker/nocolor_over.png) no-repeat;
+	background: url(../../static/img/jquery.bigcolorpicker/nocolor_over.png) no-repeat;
 }
 
 .bigpicker-sections-color{
@@ -91,6 +91,6 @@
 }
 
 .bigpicker-bgimage{
-	background-image:url(/static/img/jquery.bigcolorpicker/big_bgcolor.jpg);
+	background-image:url(../../static/img/jquery.bigcolorpicker/big_bgcolor.jpg);
 }
 
